@@ -5,11 +5,11 @@ Docker image to run an elexis-server with a sample database.
 ## Usage
 
 To start a container from this image, one has to specify the branch version of the elexis-server executable, 
-and activate the required port forwarding. The -b parameter denotes wich elexis-server executable branch to use.
-At the moment valid values are [master, 1.3, 1.2, 1.1]
+and activate the required port forwarding. The tag parameter denotes wich elexis-server executable branch to use.
+At the moment valid values are [master, 1.3]
 
 ```bash
-docker run -P medevit/elexis-server -b master
+docker run -P medevit/elexis-server:tag
 ```
 
 After initially creating a container out of this image (which is what the `run` command does) you should note

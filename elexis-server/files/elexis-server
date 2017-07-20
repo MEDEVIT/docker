@@ -1,0 +1,66 @@
+#!/bin/bash
+while [[ $# -gt 1 ]]
+do
+key="$1"
+
+case $key in
+    -b|--branch)
+    BRANCH="$2"
+    shift # past argument
+    ;;
+    --default)
+    DEFAULT=YES
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
+if [[ -z $BRANCH ]]; then
+			echo "Usage: -b branch "
+			exit -1
+fi
+
+# Prepare executable
+ES_PROG_HOME=es-prog-$BRANCH
+if [[ ! -d $ES_PROG_HOME ]]; then
+	echo -n "Fetching elexis-server executable ..."
+	wget --quiet  http://download.elexis.info/elexis-server/products/$BRANCH/info.elexis.server.runtime.product-linux.gtk.x86_64.zip
+	if [[ $? -ne 0 ]]; then
+		echo " [ERROR]"
+		exit -1
+	fi
+	echo " [DONE]"
+
+	echo -n "Unzipping elexis-server executable ..."
+	unzip -q info.elexis.server.runtime.product-linux.gtk.x86_64.zip	-d $ES_PROG_HOME
+	rm info.elexis.server.runtime.product-linux.gtk.x86_64.zip
+	echo " [DONE]"
+fi
+
+# Prepare demo database
+DEMO_DB="demoDB"
+if [[ ! -d $DEMO_DB ]]; then
+	echo -n "Fetching demo database ..."
+	wget --quiet http://download.elexis.info/elexis/demoDB/demoDB_elexis_DBVersion_3.2.7.zip
+	if [[ $? -ne 0 ]]; then
+		echo " [ERROR]"
+		exit -1
+	fi
+	echo " [DONE]"
+	echo -n "Uncompressing demo database ..."
+	unzip -q demoDB_elexis_DBVersion_3.2.7.zip
+	rm demoDB_elexis_DBVersion_3.2.7.zip
+	echo " [DONE]"
+fi
+
+if [[ ! -d "elexis-server" ]]; then
+	mkdir -p elexis-server/logs
+fi
+
+cp /elexis-connection.xml elexis-server/
+
+echo -n "Starting elexis-server ..."
+$ES_PROG_HOME/elexis-server -console 7234 -consoleLog 

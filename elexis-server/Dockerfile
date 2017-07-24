@@ -11,12 +11,14 @@ RUN adduser --disabled-password --gecos "" --home /elexis elexis && \
     	chown -R elexis:elexis /opt/elexis-server /elexis
     
 # Initialize demo database
-COPY files/elexis-connection.xml /elexis/elexis-server/
 RUN cd /elexis/ && \
 	wget http://download.elexis.info/elexis/demoDB/demoDB_elexis_DBVersion_3.2.7.zip && \
 	unzip demoDB_elexis_DBVersion_3.2.7.zip && \
 	rm demoDB_elexis_DBVersion_3.2.7.zip && \
 	chown -R elexis:elexis /opt/elexis-server /elexis
+
+COPY files/elexis-connection.xml /elexis/elexis-server/
+COPY files/elexis-server.sh /
 
 WORKDIR /elexis
 
@@ -24,4 +26,4 @@ USER elexis
 EXPOSE 8380
 EXPOSE 7234
 
-ENTRYPOINT ["/opt/elexis-server/elexis-server", "-console", "7234", "-consoleLog"]
+CMD ["/elexis-server.sh"]

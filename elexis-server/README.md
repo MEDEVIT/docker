@@ -15,3 +15,5 @@ docker run -p 8380:8380 -p 7234:7234 medevit/elexis-server:tag
 After initially creating a container out of this image (which is what the `run` command does) you should note
 the created instance, in order to restart it again afterwards. Repeatedly executing this command, always leaves
 you with a newly generated container.
+
+## Demo mode
